@@ -1,0 +1,17 @@
+.login-container{
+    margin-left: 400px;
+    align-items: center;
+    justify-content: center;
+}
+
+.input-ele{
+    margin-bottom: 20px;
+}
+
+input{
+    margin-left: 10px;
+}
+
+select{
+    margin-left: 10px;
+}
