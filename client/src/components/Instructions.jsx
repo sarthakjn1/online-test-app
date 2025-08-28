@@ -77,10 +77,6 @@ function Instructions(){
                         >
                         Go Back
                         </button>
-                      
-                        
-
-                       
                     </div>
                     </div>
                 )}
