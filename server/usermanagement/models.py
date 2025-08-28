@@ -25,8 +25,8 @@ class User(models.Model):
     password = models.CharField(max_length=255)  # hashed
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    usertype = models.ForeignKey(MasterUserType, on_delete=models.CASCADE)
-    category = models.ForeignKey(UserCategory, on_delete=models.CASCADE)
+    usertype = models.ForeignKey(MasterUserType,default=1, on_delete=models.CASCADE)
+    category = models.ForeignKey(UserCategory, default=1, on_delete=models.CASCADE)
     is_active = models.BooleanField(default=True)
     registered_on = models.DateTimeField(auto_now_add=True)
 
