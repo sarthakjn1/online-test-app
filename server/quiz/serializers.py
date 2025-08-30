@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import MasterCategory, Question, Option
+from .models import MasterCategory, Question, Option, ExamJourney, ExamResult
 
 
 class OptionSerializer(serializers.ModelSerializer):
@@ -35,3 +35,15 @@ class MasterCategoryGetSerializer(serializers.ModelSerializer):
             'id', 'title', 'description', 'totalPublishedQuestions',
             'totalTime'
         ]
+
+
+class ExamJourneySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ExamJourney
+        fields = ["id", "user", "user_journey", "created_on", "updated_on"]
+
+
+class ExamResultSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ExamResult
+        fields = ["id", "exam", "user", "total_marks", "score", "total_time", "created_on"]
