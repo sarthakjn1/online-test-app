@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios"; // don't forget this
+import axios from "axios";
 import "../styles/quiz.css";
 
 const Quiz = () => {
-  
+
   const navigate = useNavigate();
- const { categoryId } = useParams();
+  const { categoryId } = useParams();
   const [quizData, setQuizData] = useState(null);
   const [currentQ, setCurrentQ] = useState(0);
   const [answers, setAnswers] = useState({});
@@ -17,18 +17,18 @@ const Quiz = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(0);
-  
-useEffect(() => {
-  axios
-    .get(`http://127.0.0.1:8000/api/quiz/question/by-category/${categoryId}/`)
-    .then((res) => {
-      setQuizData(res.data);
-      setTimeLeft(res.data.totalTime * 60); // dynamic time
-    })
-    .catch((err) => {
-      console.error("Error fetching quiz data:", err);
-    });
-}, [categoryId]);
+
+  useEffect(() => {
+    axios
+      .get(`http://127.0.0.1:8000/api/quiz/question/by-category/${categoryId}/`)
+      .then((res) => {
+        setQuizData(res.data);
+        setTimeLeft(res.data.totalTime * 60); // dynamic time
+      })
+      .catch((err) => {
+        console.error("Error fetching quiz data:", err);
+      });
+  }, [categoryId]);
 
 
   // Timer countdown with auto-submit
@@ -72,7 +72,20 @@ useEffect(() => {
     });
   };
 
-  const handleSubmit = () => {
+  // calcuate total time 
+
+
+  function formatTime(seconds) {
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = seconds % 60;
+    return `${h}:${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+  }
+
+
+
+
+  const handleSubmit = async () => {
     if (!quizData) return;
 
     // calculate score
@@ -89,7 +102,11 @@ useEffect(() => {
     setResults(true);
     setShowPopup(true);
     setSubmitted(true);
+    // const user = JSON.parse(localStorage.getItem("user"));
 
+    // const userId = user?.user_id;
+    const userId = JSON.parse(localStorage.getItem("user_id"));
+    console.log(userId)
     // Prepare JSON to send to backend
     const analyticsData = quizData.questions.map((q, index) => {
       const selectedOptionId = answers[q.id];
@@ -97,6 +114,7 @@ useEffect(() => {
       const correctOption = q.options.find((opt) => opt.isCorrect);
 
       return {
+
         question_id: q.id,
         question_text: q.question_txt,
         selected_option: selectedOption ? selectedOption.option_text : null,
@@ -105,9 +123,48 @@ useEffect(() => {
         time_taken: questionTimes[index] || 0,
       };
     });
+    console.log(analyticsData)
+    const totalSeconds = analyticsData.reduce((acc, q) => acc + Number(q.time_taken || 0), 0);
 
-    console.log("Analytics JSON", analyticsData);
+    // console.log("Analytics JSON", analyticsData);
+    const category_id = parseInt(categoryId)
+    const ExamManagement_payload = {
+      user: userId,
+      category: category_id,
+      user_journey: analyticsData
+    };
+
+    console.log(ExamManagement_payload)
+
+
+    await axios.post("http://127.0.0.1:8000/api/quiz/results/exam_journey/", ExamManagement_payload)
+      .then(async (res) => {
+        console.log("Saved successfully:", res.data.user_data);
+        console.log(res.data)
+
+        const UsersresultPayload = {
+          user: userId,
+          exam: res.data.id,   // directly use exam_id
+          category: category_id,
+          total_marks: quizData.questions.length,
+          score: score,
+          total_time: totalSeconds 
+        };
+
+        console.log(UsersresultPayload)
+
+        // Return second API call so it gets chained
+        return await axios.post("http://127.0.0.1:8000/api/quiz/results/exam_result/", UsersresultPayload);
+      })
+      .then((resultRes) => {
+        console.log("Result saved successfully:", resultRes.data);
+      })
+      .catch((error) => {
+        console.error("Error in saving exam or result:", error);
+      });
   };
+
+
 
   if (!quizData) {
     return <div>Loading quiz...</div>;
