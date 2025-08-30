@@ -7,28 +7,34 @@ import axios from "axios"
 function Instructions() {
     const [selectedCategory, setSelectedCategory] = useState("");
     const navigate = useNavigate();
+
+    const [categories, setCategories] = useState([])
     const handleLogout = function () {
         localStorage.removeItem("token");
         alert("Logged out successfully!");
     }
 
 
-    //   const categories = ["React", "Angular", "Node.js"];
-    const [categories, setCat] = useState([])
-    useEffect(async () => {
-        const res = await axios.get("http://127.0.0.1:8000/api/quiz/master_category/")
-        setCat(res.data)
-        console.log(categories)
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const res = await axios.get("http://127.0.0.1:8000/api/quiz/master_category/");
+                setCategories(res.data);
+                console.log("Fetched categories:", res.data);
+            } catch (error) {
+                console.error("Error fetching categories:", error);
+            }
+        };
 
-
-    }, [])
+        fetchCategories();
+    }, []);
 
     const handleStart = () => {
         if (!selectedCategory) {
             alert("Please select a category before starting!");
             return;
         }
-        navigate(`/quiz/${selectedCategory.toLowerCase()}`);
+        navigate(`/quiz/${selectedCategory.id}`);
     };
 
     return (
@@ -64,12 +70,12 @@ function Instructions() {
                     <div className="d-flex gap-3 mt-3 flex-wrap">
                         {categories.map((cat) => (
                             <button
-                                key={cat}
+                                key={cat.id}
                                 className={`btn ${selectedCategory === cat ? "btn-primary" : "btn-outline-primary"
                                     }`}
                                 onClick={() => setSelectedCategory(cat)}
                             >
-                                {cat}
+                                {cat.title}
                             </button>
                         ))}
                     </div>
@@ -77,7 +83,7 @@ function Instructions() {
                     {selectedCategory && (
                         <div className="mt-5 p-4 border rounded text-center bg-light">
                             <h5 className="mb-3">
-                                You selected: <b>{selectedCategory}</b>
+                                You selected: <b>{selectedCategory.title}</b>
                             </h5>
                             <div className="d-flex justify-content-center gap-3">
                                 <button className="btn btn-success btn-lg" onClick={handleStart}>

@@ -4,6 +4,7 @@ import Home from './components/Home';
 import Register from './components/Register';
 import Login from './components/Login';
 import Quiz from './components/Quiz';
+
 import Instructions from './components/Instructions';
 
 function App() {
@@ -16,12 +17,12 @@ function App() {
         {/* Auth pages */}
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/quiz/:categoryId" element={<Quiz />} />
 
         {/* Instructions page (user chooses category + instructions shown) */}
         <Route path="/instructions" element={<Instructions />} />
 
-        {/* Quiz page (dynamic route based on chosen category) */}
-        <Route path="/quiz/:category" element={<Quiz />} />
+
       </Routes>
     </BrowserRouter>
   );

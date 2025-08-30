@@ -25,3 +25,13 @@ class MasterCategorySerializer(serializers.ModelSerializer):
             'id', 'title', 'description', 'totalPublishedQuestions',
             'totalTime', 'isEnabled', 'registered_on', 'updated_on', 'questions'
         ]
+
+
+class MasterCategoryGetSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = MasterCategory
+        fields = [
+            'id', 'title', 'description', 'totalPublishedQuestions',
+            'totalTime'
+        ]
