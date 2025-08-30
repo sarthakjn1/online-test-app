@@ -40,10 +40,10 @@ class MasterCategoryGetSerializer(serializers.ModelSerializer):
 class ExamJourneySerializer(serializers.ModelSerializer):
     class Meta:
         model = ExamJourney
-        fields = ["id", "user", "user_journey", "created_on", "updated_on"]
+        fields = ["id", "user", "category","user_journey", "created_on", "updated_on"]
 
 
 class ExamResultSerializer(serializers.ModelSerializer):
     class Meta:
         model = ExamResult
-        fields = ["id", "exam", "user", "total_marks", "score", "total_time", "created_on"]
+        fields = ["id", "exam", "user", "category", "total_marks", "score", "total_time", "created_on"]
