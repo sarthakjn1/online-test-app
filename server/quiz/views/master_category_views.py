@@ -2,7 +2,13 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from ..models import MasterCategory
-from ..serializers import MasterCategorySerializer
+from ..serializers import MasterCategorySerializer, MasterCategoryGetSerializer
+
+@api_view(["GET"])
+def get_master_categories(request):
+    categories = MasterCategory.objects.all()
+    serializer = MasterCategoryGetSerializer(categories, many=True)
+    return Response(serializer.data)
 
 @api_view(["POST"])
 def add_master_category(request):
