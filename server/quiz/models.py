@@ -47,6 +47,7 @@ class Option(models.Model):
 
 class ExamJourney(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="exam_journeys")
+    category = models.ForeignKey(MasterCategory, on_delete=models.CASCADE, related_name="exam_journey_category")
     user_journey = models.JSONField()
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
@@ -57,6 +58,7 @@ class ExamJourney(models.Model):
 class ExamResult(models.Model):
     exam = models.ForeignKey(ExamJourney, on_delete=models.CASCADE, related_name="results")
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="exam_results")
+    category = models.ForeignKey(MasterCategory, on_delete=models.CASCADE, related_name="exam_category")
     total_marks = models.IntegerField()
     score = models.IntegerField()
     total_time = models.IntegerField(help_text="Total time taken in seconds")  # or seconds depending on design
