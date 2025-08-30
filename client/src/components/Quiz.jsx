@@ -1,75 +1,231 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios"; // don't forget this
+import "../styles/quiz.css";
 
 const Quiz = () => {
-    const { categoryId } = useParams();
-    const [quizData, setQuizData] = useState(null);
+  
+  const navigate = useNavigate();
+ const { categoryId } = useParams();
+  const [quizData, setQuizData] = useState(null);
+  const [currentQ, setCurrentQ] = useState(0);
+  const [answers, setAnswers] = useState({});
+  const [timeLeft, setTimeLeft] = useState(60 * 60);
+  const [results, setResults] = useState(false);
+  const [questionTimes, setQuestionTimes] = useState({});
+  const [startTime, setStartTime] = useState(Date.now());
+  const [showPopup, setShowPopup] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [score, setScore] = useState(0);
+  
+useEffect(() => {
+  axios
+    .get(`http://127.0.0.1:8000/api/quiz/question/by-category/${categoryId}/`)
+    .then((res) => {
+      setQuizData(res.data);
+      setTimeLeft(res.data.totalTime * 60); // dynamic time
+    })
+    .catch((err) => {
+      console.error("Error fetching quiz data:", err);
+    });
+}, [categoryId]);
 
-    useEffect(() => {
-        axios
-            .get(`http://127.0.0.1:8000/api/quiz/question/by-category/${categoryId}/`) // replace with your backend IP + route
-            .then((res) => {
-                setQuizData(res.data);
-            })
-            .catch((err) => {
-                console.error("Error fetching quiz data:", err);
-            });
-    }, []);
 
-    const handleSelect = (questionId, optionId) => {
-        setAnswers({
-            ...answers,
-            [questionId]: optionId,
-        });
+  // Timer countdown with auto-submit
+  useEffect(() => {
+    if (results) return; // stop timer after submit
+
+    const interval = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          handleSubmit(true); // auto-submit when time is up
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [results]);
+
+  // Save time per question
+  useEffect(() => {
+    return () => {
+      const spent = Math.floor((Date.now() - startTime) / 1000);
+      setQuestionTimes((prev) => ({
+        ...prev,
+        [currentQ]: (prev[currentQ] || 0) + spent,
+      }));
     };
+  }, [currentQ]);
 
+  const handleAnswer = (qid, optionId) => {
+    if (results) return;
+    setAnswers((prev) => {
+      if (prev[qid] === optionId) {
+        const updated = { ...prev };
+        delete updated[qid];
+        return updated;
+      }
+      return { ...prev, [qid]: optionId };
+    });
+  };
 
-    if (!quizData) return <p>Loading quiz...</p>;
+  const handleSubmit = () => {
+    if (!quizData) return;
 
-    return (
-        <div className="container mt-5">
-            <h2 className="mb-4 text-center">Quiz</h2>
-            {quizData && quizData.questions.map((q, idx) => (
-                <div key={q.id} className="card mb-3 shadow-sm">
-                    <div className="card-body">
-                        <h5 className="card-title">
-                            {idx + 1}. {q.question_txt}
-                        </h5>
-                        <div className="list-group">
-                            {q.options.map((opt) => (
-                                <label
-                                    key={opt.id}
-                                    className={`list-group-item list-group-item-action ${opt.id
-                                        }`}
-                                    style={{ cursor: "pointer" }}
-                                >
-                                    <input
-                                        type="radio"
-                                        name={`question-${q.id}`}
-                                        value={opt.id}
-                                        onChange={() => handleSelect(q.id, opt.id)}
-                                        className="form-check-input me-2"
-                                    />
-                                    {opt.option_text}
-                                </label>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            ))}
+    // calculate score
+    let finalScore = 0;
+    quizData.questions.forEach((q) => {
+      const selectedOptionId = answers[q.id];
+      const correctOption = q.options.find((opt) => opt.isCorrect);
+      if (selectedOptionId === correctOption?.id) {
+        finalScore++;
+      }
+    });
 
-            <div className="text-center mt-4">
-                <button
-                    className="btn btn-primary"
-                    onClick={() => console.log("Selected Answers:", answers)}
-                >
-                    Submit
-                </button>
-            </div>
+    setScore(finalScore);
+    setResults(true);
+    setShowPopup(true);
+    setSubmitted(true);
+
+    // Prepare JSON to send to backend
+    const analyticsData = quizData.questions.map((q, index) => {
+      const selectedOptionId = answers[q.id];
+      const selectedOption = q.options.find((opt) => opt.id === selectedOptionId);
+      const correctOption = q.options.find((opt) => opt.isCorrect);
+
+      return {
+        question_id: q.id,
+        question_text: q.question_txt,
+        selected_option: selectedOption ? selectedOption.option_text : null,
+        correct_answer: correctOption.option_text,
+        is_correct: selectedOptionId === correctOption.id,
+        time_taken: questionTimes[index] || 0,
+      };
+    });
+
+    console.log("Analytics JSON", analyticsData);
+  };
+
+  if (!quizData) {
+    return <div>Loading quiz...</div>;
+  }
+
+  const q = quizData.questions[currentQ];
+
+  return (
+    <div className="quiz-page">
+      {/* Sidebar */}
+      <div className="sidebar">
+        {quizData.questions.map((_, index) => (
+          <button
+            key={index}
+            className={`
+              ${currentQ === index ? "active" : ""}
+              ${answers[quizData.questions[index].id] ? "answered" : ""}
+            `}
+            onClick={() => {
+              setQuestionTimes((prev) => ({
+                ...prev,
+                [currentQ]: Math.floor((Date.now() - startTime) / 1000),
+              }));
+              setCurrentQ(index);
+              setStartTime(Date.now());
+            }}
+          >
+            {index + 1}
+          </button>
+        ))}
+
+        {/*Final Score after submit */}
+        {submitted && (
+          <div>
+            <hr />
+            Score: {score} / {quizData.questions.length}
+          </div>
+        )}
+      </div>
+
+      {/* Main quiz area */}
+      <div className="quiz-container">
+        <div className="timer text-end fw-bold" style={{ color: "crimson" }}>
+          Time Left: {Math.floor(timeLeft / 60)}:
+          {(timeLeft % 60).toString().padStart(2, "0")}
         </div>
-    );
-};
+        <h2>Category: {quizData.category_title.toUpperCase()}</h2>
+        <h3>
+          Q{currentQ + 1}. {q.question_txt}
+        </h3>
+        <div className="options mt-3">
+          {q.options.map((opt) => {
+            let className = "option";
+            const userAns = answers[q.id];
+            const isCorrect = opt.isCorrect;
 
+            if (results) {
+              if (userAns === opt.id && isCorrect) className += " correct";
+              else if (userAns === opt.id && !isCorrect) className += " wrong";
+              else if (isCorrect) className += " correct";
+            } else {
+              if (userAns === opt.id) className += " selected";
+            }
+
+            return (
+              <div
+                key={opt.id}
+                className={className}
+                onClick={() => handleAnswer(q.id, opt.id)}
+              >
+                {opt.option_text}
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="quiz-footer">
+          {!results ? (
+            <>
+              <button
+                className="prev-btn"
+                disabled={currentQ === 0}
+                onClick={() => setCurrentQ(currentQ - 1)}
+              >
+                Previous
+              </button>
+              {currentQ < quizData.questions.length - 1 ? (
+                <button
+                  className="next-btn"
+                  onClick={() => setCurrentQ(currentQ + 1)}
+                >
+                  Next
+                </button>
+              ) : (
+                <button className="next-btn submit-btn" onClick={handleSubmit}>
+                  Submit
+                </button>
+              )}
+            </>
+          ) : (
+            <button className="btn btn-primary" onClick={() => navigate("/")}>
+              Go Home
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Popup */}
+      {showPopup && (
+        <div className="popup-overlay">
+          <div className="popup">
+            <h2>Test submitted successfully</h2>
+            <button onClick={() => setShowPopup(false)}>OK</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 export default Quiz;

@@ -1,0 +1,186 @@
+/* put this at the very top of quiz.css (or a global css) */
+html, body, #root {
+  height: 100%;
+  margin: 0;           /* removes the white gap around the page */
+}
+
+/* replace your .quiz-page block with this */
+.quiz-page {
+  display: grid;
+  grid-template-columns: clamp(220px, 24vw, 360px) 1fr; /* sidebar 20–25% */
+  gap: 24px;
+  height: 100vh;
+  width: 100vw;
+  padding: 0;          /* flush to the window edges */
+  box-sizing: border-box;
+}
+
+/* Sidebar */
+/* replace your .sidebar block with this */
+.sidebar {
+  background: #1f1f1f;
+  color: #fff;
+  border-radius: 16px;
+  padding: 12px 10px;
+  height: 100%;          /* full height */
+  overflow: auto;
+
+  /* lay out the number buttons in rows, wrapping horizontally first */
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(44px, 1fr));
+  grid-auto-rows: 44px;
+  gap: 12px;
+  align-content: start;  /* keep content at the top */
+}
+
+.sidebar button {
+  border-radius: 50%;
+  background: #444;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .sidebar button {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 600px) {
+  .sidebar button {
+    width: 28px;
+    height: 28px;
+    font-size: 10px;
+  }
+}
+.sidebar button.active {
+  background: #007bff; /* Blue active */
+}
+
+.sidebar button.answered {
+  background: #28a745; /* Green answered */
+}
+
+.sidebar button:hover {
+  transform: scale(1.1);
+}
+
+/* Quiz Main Box */
+.quiz-container {
+  width: 100%;            /* fill the 2nd grid column */
+  max-width: none;        /* IMPORTANT: remove any old max-width */
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 6px 24px rgba(0,0,0,.08);
+  padding: 28px 32px;
+  box-sizing: border-box;
+  overflow: auto;
+  min-height: calc(100vh - 0px);
+}
+/* Options */
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 15px;
+}
+
+.option {
+  padding: 12px;
+  border: 2px solid #007bff;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.option:hover {
+  background: #e9f2ff;
+}
+
+.option.selected {
+  background: #007bff;
+  color: white;
+}
+
+/* Footer Nav */
+.quiz-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.prev-btn,
+.next-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background: #007bff;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.prev-btn:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}
+
+.next-btn:hover,
+.prev-btn:hover {
+  background: #0056b3;
+}
+
+.submit-btn {
+  background: #28a745 !important; /* green submit */
+}
+.quiz-content {
+  flex: 3;               /* take rest of space */
+  max-width: 80%;        /* ensure sidebar gets at most 20% */
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.option.selected {
+  background: #e0f0ff;
+  border-color: #2196f3;
+}
+.option.correct {
+  background: #d4edda;
+  border-color: #28a745;
+  color: #155724;
+}
+.option.wrong {
+  background: #f8d7da;
+  border-color: #dc3545;
+  color: #721c24;
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup {
+  background: #fff;
+  padding: 20px 30px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
