@@ -1,0 +1,26 @@
+.instructions-image img {
+    height:100%;
+    width:500px;
+
+}
+
+.instructions-card {
+  background: #f3f0f0;
+  border-left: 3px solid #fd0d0d; /* nice blue divider */
+}
+
+.instruction-list {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  line-height: 1.8;
+  font-size: 1rem;
+  color: #444;
+}
+
+.instruction-list li {
+  margin-bottom: 10px;
+}
+
+.instruction-list li b {
+  color: #060606; /* highlight important text */
+}

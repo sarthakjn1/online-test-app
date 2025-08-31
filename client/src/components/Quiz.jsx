@@ -148,20 +148,33 @@ const Quiz = () => {
           category: category_id,
           total_marks: quizData.questions.length,
           score: finalScore,
-          total_time: totalSeconds 
+          total_time: totalSeconds
         };
 
         console.log(UsersresultPayload)
-
-        // Return second API call so it gets chained
-        return await axios.post("http://127.0.0.1:8000/api/quiz/results/exam_result/", UsersresultPayload);
+        const examJourneyData = res.data;
+        console.log(examJourneyData)
+        const resultRes = await axios.post("http://127.0.0.1:8000/api/quiz/results/exam_result/", UsersresultPayload);
+        return { examJourneyData, resultRes: resultRes.data};
       })
-      .then((resultRes) => {
+      .then(({ examJourneyData, resultRes }) => {
+        console.log(examJourneyData)
         console.log("Result saved successfully:", resultRes.data);
+        navigate("/displayresult", {
+          state: {
+            quizData:quizData,
+            user: examJourneyData.user_journey,
+            exam: resultRes.exam,
+            score: resultRes.score,
+            total_marks : resultRes.total_marks
+          }
+        })
       })
       .catch((error) => {
         console.error("Error in saving exam or result:", error);
       });
+
+
   };
 
 

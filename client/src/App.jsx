@@ -7,6 +7,7 @@ import Quiz from './components/Quiz';
 
 import ProtectedRoute from './components/ProtectedRoute';
 import Instructions from './components/Instructions';
+import DisplayResult from './components/DisplayResult';
 import AnalyticsDashboard from "./components/AnalyticsDashboard";
 
 
@@ -22,11 +23,10 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
 
-
         {/* Instructions page (user chooses category + instructions shown) */}
         <Route path="/instructions" element={<ProtectedRoute><Instructions /></ProtectedRoute>} />
         <Route path="/quiz/:categoryId" element={<ProtectedRoute><Quiz /></ProtectedRoute>} />
-
+        <Route path="/displayresult" element={<DisplayResult />} />
         <Route path="/analytics" element={<AnalyticsDashboard />} />
 
       </Routes>
