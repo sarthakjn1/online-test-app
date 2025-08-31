@@ -13,8 +13,12 @@ function Instructions() {
     const handleLogout = () => {
         localStorage.removeItem("token");
         alert("Logged out successfully!");
+
         navigate("/")
     };
+
+
+
 
     useEffect(() => {
         const fetchCategories = async () => {
