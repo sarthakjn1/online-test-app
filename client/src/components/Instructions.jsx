@@ -12,6 +12,7 @@ function Instructions() {
     const handleLogout = function () {
         localStorage.removeItem("token");
         alert("Logged out successfully!");
+        navigate('/')
     }
 
 

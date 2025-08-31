@@ -151,8 +151,8 @@ html, body, #root {
 }
 
 .option.selected {
-  background: #e0f0ff;
-  border-color: #2196f3;
+  color: #e0f0ff;
+  border-color: blue;
 }
 .option.correct {
   background: #d4edda;

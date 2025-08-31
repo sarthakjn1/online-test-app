@@ -9,6 +9,7 @@
 }
 
 
+
 .card {
   border-radius: 15px;
   background-color: #ffffff;
@@ -24,6 +25,13 @@
   box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
 }
 
+.form-group{
+  margin-bottom: 20px;
+}
+.login-btn{
+  display: block;
+  margin: 20px auto;
+}
 
 .btn-primary:hover {
   background-color: #5563c1;

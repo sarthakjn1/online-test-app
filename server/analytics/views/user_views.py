@@ -10,7 +10,7 @@ def user_progress_view(request, user_id):
     return Response(serializer.data)
 
 @api_view(["GET"])
-def user_avg_score_view(request, user_id):
-    data = get_user_avg_score(user_id)
-    serializer = UserAvgScoreSerializer(data)
+def user_avg_score_view(request):
+    data = get_user_avg_score()
+    serializer = UserAvgScoreSerializer(data, many=True)
     return Response(serializer.data)

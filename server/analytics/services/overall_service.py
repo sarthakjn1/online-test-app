@@ -7,4 +7,4 @@ def get_total_quizzes():
 
 def get_active_users_last_7_days():
     week_ago = now() - timedelta(days=7)
-    return ExamResult.objects.filter(created_at__gte=week_ago).values("user_id").distinct().count()
+    return ExamResult.objects.filter(created_on__gte=week_ago).values("user_id").distinct().count()

@@ -147,7 +147,7 @@ const Quiz = () => {
           exam: res.data.id,   // directly use exam_id
           category: category_id,
           total_marks: quizData.questions.length,
-          score: score,
+          score: finalScore,
           total_time: totalSeconds 
         };
 
