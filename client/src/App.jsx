@@ -6,6 +6,7 @@ import Login from './components/Login';
 import Quiz from './components/Quiz';
 
 import Instructions from './components/Instructions';
+import DisplayResult from './components/DisplayResult';
 
 function App() {
   return (
@@ -17,10 +18,12 @@ function App() {
         {/* Auth pages */}
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+
+        {/*Quiz pages*/}
         <Route path="/quiz/:categoryId" element={<Quiz />} />
 
-        {/* Instructions page (user chooses category + instructions shown) */}
         <Route path="/instructions" element={<Instructions />} />
+        <Route path="/displayresult" element={<DisplayResult />} />
 
 
       </Routes>

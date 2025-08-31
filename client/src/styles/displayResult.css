@@ -1,0 +1,31 @@
+.result-summary {
+margin-left: 50px;
+  background: #f8f9fa;
+  border-radius: 12px;
+}
+html, body, #root {
+  height: 100%;
+  width:100%;
+  margin: 0;         
+}
+
+.question-card {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+}
+
+.list-group-item {
+  font-size: 16px;
+  transition: background 0.3s ease;
+}
+
+.list-group-item-success {
+  background-color: #d4f8d4 !important;
+  font-weight: bold;
+}
+
+.list-group-item-danger {
+  background-color: #ffd6d6 !important;
+  font-weight: bold;
+}
