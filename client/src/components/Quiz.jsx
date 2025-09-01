@@ -148,11 +148,7 @@ const Quiz = () => {
           category: category_id,
           total_marks: quizData.questions.length,
           score: finalScore,
-<<<<<<< HEAD
           total_time: totalSeconds
-=======
-          total_time: totalSeconds 
->>>>>>> d83ccbcda3bbedc9033627f31df4931b6e7f6af6
         };
 
         console.log(UsersresultPayload)

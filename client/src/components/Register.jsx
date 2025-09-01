@@ -10,24 +10,63 @@ const Register = () => {
   const [emailId, setEmailId] = useState("")
   const [password, setPassword] = useState("")
   const [user_category, setUserCategory] = useState("Student")
+  const [errorMsg, setErrorMsg] = useState("")   // For validation messages
+  const [loading, setLoading] = useState(false) // For button disable
   const navigate = useNavigate();
 
-  const handleUserRegistration = async function (e) {
+  const validateInputs = () => {
+    if (!firstname.trim() || !lastname.trim() || !username.trim() || !emailId.trim() || !password.trim()) {
+      setErrorMsg("⚠️ Please fill all fields with valid inputs (no spaces only).");
+      return false;
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(emailId.trim())) {
+      setErrorMsg("⚠️ Please enter a valid email address.");
+      return false;
+    }
+
+    if (password.length < 6) {
+      setErrorMsg("⚠️ Password must be at least 6 characters long.");
+      return false;
+    }
+
+    setErrorMsg("");
+    return true;
+  };
+
+  const handleUserRegistration = async (e) => {
     e.preventDefault();
+    if (!validateInputs()) return;
+
     try {
+      setLoading(true);
       const response = await axios.post("http://127.0.0.1:8000/api/users/register/", {
-        first_name: firstname,
-        last_name: lastname,
-        username: username,
+        first_name: firstname.trim(),
+        last_name: lastname.trim(),
+        username: username.trim(),
         password: password,
         usertype: 1,
         category: user_category === "Student" ? 1 : 2,
-        email: emailId,
+        email: emailId.trim(),
       });
       console.log("Register success:", response.data);
-      alert("User registered successfully!");
+      alert("✅ User registered successfully!");
+      navigate("/login"); // redirect to login page
     } catch (error) {
-      console.error("Error registering:", error.response?.data || error.message);
+      const errorDetail = error.response?.data || error.message;
+      console.error("Error registering:", errorDetail);
+
+      if (error.response?.status === 400 && error.response?.data?.email) {
+        setErrorMsg("❌ User already registered with this email.");
+      } else if (error.response?.status === 400 && error.response?.data?.username) {
+        setErrorMsg("❌ Username already exists.");
+      } else {
+        setErrorMsg("❌ Registration failed. Please try again.");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -36,6 +75,8 @@ const Register = () => {
       <div className="card shadow-lg border-0 rounded-4" style={{ width: '28rem' }}>
         <div className="card-body p-4">
           <h3 className="card-title mb-4 text-center fw-bold">Create Account</h3>
+
+          {errorMsg && <div className="alert alert-danger py-2">{errorMsg}</div>}
 
           <form onSubmit={handleUserRegistration}>
             <div className="mb-3">
@@ -78,7 +119,9 @@ const Register = () => {
             </div>
 
             <div className="d-grid">
-              <button type="submit" className="btn btn-primary btn-lg rounded-3">Register</button>
+              <button type="submit" className="btn btn-primary btn-lg rounded-3" disabled={loading}>
+                {loading ? "Registering..." : "Register"}
+              </button>
             </div>
           </form>
         </div>
