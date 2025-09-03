@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { lazy, Suspense } from 'react';
+import BulkQuestionForm from './components/BulkQuestionForm';
 
 const Home = lazy(() => import('./components/Home'));
 const Register = lazy(() => import('./components/Register'));
@@ -34,6 +35,7 @@ function App() {
           <Route path="/displayresult" element={<DisplayResult />} />
 
           <Route path="/analytics" element={<AnalyticsDashboard />} />
+          <Route path="/bulkquestionadd" element={<BulkQuestionForm />} />
 
         </Routes>
       </Suspense>

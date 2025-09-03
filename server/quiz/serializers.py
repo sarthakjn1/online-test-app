@@ -47,3 +47,39 @@ class ExamResultSerializer(serializers.ModelSerializer):
     class Meta:
         model = ExamResult
         fields = ["id", "exam", "user", "category", "total_marks", "score", "total_time", "created_on"]
+
+
+class QuestionCreateSerializer(serializers.ModelSerializer):
+    options = OptionSerializer(many=True)
+    category = serializers.PrimaryKeyRelatedField(queryset=MasterCategory.objects.all())
+
+    class Meta:
+        model = Question
+        fields = ['id', 'category', 'question_txt', 'isEnabled', 'created_on', 'options']
+
+    def create(self, validated_data):
+        options_data = validated_data.pop("options")
+        question = Question.objects.create(**validated_data)
+
+        # Ensure exactly one correct answer
+        correct_count = sum([1 for opt in options_data if opt.get("is_correct")])
+        if correct_count != 1:
+            raise serializers.ValidationError("Each question must have exactly one correct option.")
+
+        for option in options_data:
+            Option.objects.create(question=question, **option)
+
+        return question
+    
+class BulkQuestionCreateSerializer(serializers.Serializer):
+    questions = QuestionCreateSerializer(many=True)
+
+    def create(self, validated_data):
+        questions_data = validated_data.pop("questions")
+        created_questions = []
+
+        for q_data in questions_data:
+            question = QuestionCreateSerializer().create(q_data)
+            created_questions.append(question)
+
+        return created_questions
