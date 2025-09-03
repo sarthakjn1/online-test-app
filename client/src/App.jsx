@@ -1,17 +1,16 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { lazy, Suspense } from 'react';
-import BulkQuestionForm from './components/BulkQuestionForm';
 
-const Home = lazy(() => import('./components/Home'));
-const Register = lazy(() => import('./components/Register'));
-const Login = lazy(() => import('./components/Login'));
-const Quiz = lazy(() => import('./components/Quiz'));
-const ProtectedRoute = lazy(() => import('./components/ProtectedRoute'));
-const Instructions = lazy(() => import('./components/Instructions'));
-const DisplayResult = lazy(() => import('./components/DisplayResult'));
-const AnalyticsDashboard = lazy(() => import('./components/AnalyticsDashboard'));
-
+const Home = lazy(() => import('./components/usermgmt/Home'));
+const Register = lazy(() => import('./components/usermgmt/Register'));
+const Login = lazy(() => import('./components/usermgmt/Login'));
+const Quiz = lazy(() => import('./components/quizapp/Quiz'));
+const ProtectedRoute = lazy(() => import('./components/usermgmt/ProtectedRoute'));
+const Instructions = lazy(() => import('./components/quizapp/Instructions'));
+const DisplayResult = lazy(() => import('./components/quizapp/DisplayResult'));
+const AnalyticsDashboard = lazy(() => import('./components/analytics/AnalyticsDashboard'));
+const BulkQuestionForm = lazy(() => import('./components/quizapp/BulkQuestionForm'))
 
 
 

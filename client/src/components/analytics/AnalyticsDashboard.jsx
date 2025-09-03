@@ -4,6 +4,8 @@ import OverallStats from "./OverallStats";
 import CategoryPerformanceChart from "./CategoryPerformanceChart";
 import CategoryAttemptsTable from "./CategoryAttemptsTable";
 import TopUsersTable from "./TopUsersTable";
+import DailyTrendsChart from "./DailyTrendsCharts";
+import ScoreDistributionChart from "./ScoreDistributionChart";
 
 const AnalyticsDashboard = () => {
   const [categoryPerformance, setCategoryPerformance] = useState([]);
@@ -35,26 +37,38 @@ const AnalyticsDashboard = () => {
       <h1 className="text-center mb-4">📊 Analytics Dashboard</h1>
 
       {/* Row 1: Overall Stats */}
-      <div className="row mb-4">
-        <div className="col-12">
-          <OverallStats overallStats={overallStats} />
+      <div className="col">
+        <div className="row mb-4">
+          <div className="col-12">
+            <OverallStats overallStats={overallStats} />
+          </div>
+          
         </div>
-      </div>
 
-      {/* Row 2: Chart + Attempts Table */}
-      <div className="row mb-4">
-        <div className="col-md-6 mb-3">
-          <CategoryPerformanceChart data={categoryPerformance} />
+        {/* Row 2: Chart + Attempts Table */}
+        <div className="row mb-4">
+          <div className="col-md-6 mb-3">
+            <CategoryPerformanceChart data={categoryPerformance} />
+          </div>
+          <div className="col-md-6 mb-3">
+            <DailyTrendsChart />
+          </div>
+          <div className="col-md-6 mb-3">
+            <CategoryAttemptsTable data={categoryPerformance} />
+          </div>
+          <div className="col-md-6 mb-3">
+            <ScoreDistributionChart />
+          </div>
         </div>
-        <div className="col-md-6 mb-3">
-          <CategoryAttemptsTable data={categoryPerformance} />
-        </div>
-      </div>
 
-      {/* Row 3: Top Users Table */}
-      <div className="row">
-        <div className="col-12">
-          <TopUsersTable />
+
+      </div>
+      <div className="col">
+        {/* Row 3: Top Users Table */}
+        <div className="row">
+          <div className="col-12">
+            <TopUsersTable />
+          </div>
         </div>
       </div>
     </div>

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import booksLeft from "../assets/books_image.png";
+import booksLeft from "../../assets/books_image.png";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "../styles/instructions.css";
+import "../../styles/instructions.css";
 
 function Instructions() {
     const [selectedCategory, setSelectedCategory] = useState("");
