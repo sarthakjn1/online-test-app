@@ -1,9 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/displayResult.css";
-
-
 
 const DisplayResult = () => {
   const { state } = useLocation();
@@ -21,19 +19,25 @@ const DisplayResult = () => {
   }
 
   const { quizData, user, score, total_marks } = state;
-  console.log("in ds quiz data", quizData)
-  console.log("user journery", user)
 
-
-  // Map user answers for quick lookup by question_id
+  // Map user answers for quick lookup
   const userAnswers = {};
   if (user && Array.isArray(user)) {
     user.forEach((ans) => {
-      console.log("ans.question_id", ans.question_id);
       userAnswers[ans.question_id] = ans;
     });
   }
-  console.log("userAnswers", userAnswers)
+
+  // 🔹 Pagination State
+  const [currentPage, setCurrentPage] = useState(1);
+  const questionsPerPage = 10; // show 10 per page
+
+  // Calculate current page questions
+  const indexOfLastQ = currentPage * questionsPerPage;
+  const indexOfFirstQ = indexOfLastQ - questionsPerPage;
+  const currentQuestions = quizData?.questions?.slice(indexOfFirstQ, indexOfLastQ);
+
+  const totalPages = Math.ceil((quizData?.questions?.length || 0) / questionsPerPage);
 
   return (
     <div className="container-fluid mt-5">
@@ -49,20 +53,15 @@ const DisplayResult = () => {
 
       <h3 className="mb-4 text-center">📝 Your Responses</h3>
 
-      {quizData?.questions && quizData.questions.length > 0 ? (
-        quizData.questions.map((q, idx) => {
+      {currentQuestions && currentQuestions.length > 0 ? (
+        currentQuestions.map((q, idx) => {
           const userAns = userAnswers[q.id];
-          console.log(userAns)
-
           const selectedAnswer = userAns?.selected_option || "Not Answered";
-          const correctAnswer = userAns?.correct_answer || "N/A";
-          console.log(selectedAnswer)
-          console.log(correctAnswer)
 
           return (
             <div key={q.id} className="card shadow-sm p-4 mb-4 question-card">
               <h5>
-                Q{idx + 1}. {q.question_txt}
+                Q{indexOfFirstQ + idx + 1}. {q.question_txt}
               </h5>
 
               <ul className="list-group mt-3">
@@ -90,7 +89,6 @@ const DisplayResult = () => {
               </ul>
 
               <div className="mt-3">
-
                 <p>
                   <strong>Time Spent:</strong> {userAns?.time_taken || 0}s
                 </p>
@@ -102,6 +100,27 @@ const DisplayResult = () => {
         <p className="text-center text-muted">No questions available.</p>
       )}
 
+      {/* 🔹 Pagination Controls */}
+      <div className="d-flex justify-content-center align-items-center my-4">
+        <button
+          className="btn btn-outline-primary me-2"
+          onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+          disabled={currentPage === 1}
+        >
+          ⬅ Previous
+        </button>
+        <span className="mx-2">
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          className="btn btn-outline-primary ms-2"
+          onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+          disabled={currentPage === totalPages}
+        >
+          Next ➡
+        </button>
+      </div>
+
       <div className="text-center mt-4">
         <button className="btn btn-primary" onClick={() => navigate("/")}>
           ⬅ Back to Home
@@ -112,3 +131,4 @@ const DisplayResult = () => {
 };
 
 export default DisplayResult;
+

@@ -225,6 +225,7 @@ const Quiz = () => {
           {(timeLeft % 60).toString().padStart(2, "0")}
         </div>
         <h2>Category: {quizData.category_title.toUpperCase()}</h2>
+        <br />
         <h3>
           Q{currentQ + 1}. {q.question_txt}
         </h3>

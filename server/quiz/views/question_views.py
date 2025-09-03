@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 import random
 from ..models import Question, MasterCategory
-from ..serializers import QuestionSerializer
+from ..serializers import QuestionSerializer, BulkQuestionCreateSerializer
 
 @api_view(["POST"])
 def add_question(request):
@@ -101,6 +101,15 @@ def get_category_questions(request, category_id):
     }
 
     return Response(response_data, status=status.HTTP_200_OK)
+
+
+@api_view(["POST"])
+def bulk_add_questions(request):
+    serializer = BulkQuestionCreateSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({"message": "Questions added successfully"}, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 
