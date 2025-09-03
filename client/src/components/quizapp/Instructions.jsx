@@ -12,6 +12,9 @@ function Instructions() {
 
     const handleLogout = () => {
         localStorage.removeItem("token");
+        localStorage.removeItem("user_id");
+        localStorage.removeItem("usertype");
+
         alert("Logged out successfully!");
 
         navigate("/")
@@ -66,7 +69,6 @@ function Instructions() {
 
                     {/* Instructions */}
                     <ul className="instruction-list text-start mt-4">
-                        <li>The test duration is <b>60 minutes</b>.</li>
                         <li>You are being <b>proctored</b> throughout the test.</li>
                         <li>Do not cheat, seek external help, or use unfair means.</li>
                         <li>Do not switch tabs or open another browser window.</li>

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 import OverallStats from "./OverallStats";
 import CategoryPerformanceChart from "./CategoryPerformanceChart";
 import CategoryAttemptsTable from "./CategoryAttemptsTable";
@@ -11,6 +13,18 @@ const AnalyticsDashboard = () => {
   const [categoryPerformance, setCategoryPerformance] = useState([]);
   const [overallStats, setOverallStats] = useState({});
   const [loading, setLoading] = useState(true);
+
+  const navigate = useNavigate();
+
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user_id");
+    localStorage.removeItem("usertype");
+    alert("Logged out successfully!");
+
+    navigate("/")
+  };
 
   useEffect(() => {
     const fetchAnalytics = async () => {
@@ -42,7 +56,7 @@ const AnalyticsDashboard = () => {
           <div className="col-12">
             <OverallStats overallStats={overallStats} />
           </div>
-          
+
         </div>
 
         {/* Row 2: Chart + Attempts Table */}
@@ -70,6 +84,13 @@ const AnalyticsDashboard = () => {
             <TopUsersTable />
           </div>
         </div>
+      </div>
+
+      {/* Logout Button */}
+      <div className="position-absolute top-0 end-0 m-3">
+        <button className="btn btn-danger px-4" onClick={handleLogout}>
+          Logout
+        </button>
       </div>
     </div>
   );

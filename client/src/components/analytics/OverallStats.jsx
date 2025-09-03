@@ -25,7 +25,7 @@ const OverallStats = ({ overallStats }) => {
         <div className="card shadow-sm">
           <div className="card-body text-center">
             <h5 className="card-title">Average Score (%)</h5>
-            <p className="display-6">{overallStats.avg_score}</p>
+            <p className="display-6">{Math.round(overallStats.avg_score, 2)}</p>
           </div>
         </div>
       </div>

@@ -11,6 +11,7 @@ const Instructions = lazy(() => import('./components/quizapp/Instructions'));
 const DisplayResult = lazy(() => import('./components/quizapp/DisplayResult'));
 const AnalyticsDashboard = lazy(() => import('./components/analytics/AnalyticsDashboard'));
 const BulkQuestionForm = lazy(() => import('./components/quizapp/BulkQuestionForm'))
+const InstructorHome = lazy(() => import('./components/quizapp/InstructorHome'))
 
 
 
@@ -31,10 +32,12 @@ function App() {
           {/* Instructions page (user chooses category + instructions shown) */}
           <Route path="/instructions" element={<ProtectedRoute><Instructions /></ProtectedRoute>} />
           <Route path="/quiz/:categoryId" element={<ProtectedRoute><Quiz /></ProtectedRoute>} />
-          <Route path="/displayresult" element={<DisplayResult />} />
+          <Route path="/displayresult" element={<ProtectedRoute><DisplayResult /></ProtectedRoute>} />
 
-          <Route path="/analytics" element={<AnalyticsDashboard />} />
-          <Route path="/bulkquestionadd" element={<BulkQuestionForm />} />
+
+          <Route path="/instructor-home" element={<ProtectedRoute><InstructorHome /></ProtectedRoute>}></Route>
+          <Route path="/analytics" element={<ProtectedRoute><AnalyticsDashboard /></ProtectedRoute>} />
+          <Route path="/bulkquestionadd" element={<ProtectedRoute><BulkQuestionForm /></ProtectedRoute>} />
 
         </Routes>
       </Suspense>

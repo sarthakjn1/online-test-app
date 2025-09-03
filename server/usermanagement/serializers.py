@@ -28,9 +28,6 @@ class UserSerializer(serializers.ModelSerializer):
         validated_data['password'] = make_password(validated_data['password'])  # hash password
         return super().create(validated_data)
     
-class LoginSerializer(serializers.Serializer):
-    email = serializers.EmailField()
-    password = serializers.CharField(write_only=True)
 
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
