@@ -1,19 +1,19 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import "../styles/home.css"; 
-import UFF_icon from "../assets/user_friendly_feature_icon.png"
-import RTR_icon from "../assets/Real_time_results.png"
-import PT_icon from "../assets/progress_tracking.png"
+import "../../styles/home.css"; 
+import UFF_icon from "../../assets/user_friendly_feature_icon.png"
+import RTR_icon from "../../assets/Real_time_results.png"
+import PT_icon from "../../assets/progress_tracking.png"
 
 
 function Home() {
   const navigate = useNavigate();
 
   return (
-    <div className="home-container"> 
+    <div className="home-container "> 
  
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div className="container">
+        <div className="container-fluid">
           <a className="navbar-brand fw-bold fs-3" href="/">Online Test Portal</a>
           <div className="ms-auto">
             <button
@@ -56,7 +56,7 @@ function Home() {
       </header>
 
       
-      <section className="features container text-center py-5">
+      <section className="features container-fluid text-center py-5">
         <div className="row">
           <div className="col-md-4">
             <img

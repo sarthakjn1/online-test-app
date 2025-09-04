@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "../styles/displayResult.css";
+import "../../styles/displayResult.css";
 
 const DisplayResult = () => {
   const { state } = useLocation();

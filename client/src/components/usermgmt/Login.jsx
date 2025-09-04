@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
-import '../styles/Login.css'
+import '../../styles/login.css'
 
 const Login = () => {
   const [username, setUsername] = useState("")
@@ -23,10 +23,17 @@ const Login = () => {
 
       // Save JWT token + user id
       localStorage.setItem("token", response.data.access);
-      localStorage.setItem("user_id", response.data.user_id)
+      localStorage.setItem("user_id", response.data.user_id);
+      localStorage.setItem("usertype", response.data.usertype);
 
-      console.log("Login success:", response.data);
-      navigate("/instructions");
+      if (response.data.usertype && response.data.usertype === 1){
+        navigate("/instructions");
+      }
+      else{
+        navigate("/instructor-home");
+      }
+
+      
     } catch (error) {
       console.error("Error logging in:", error.response?.data || error.message);
 
