@@ -629,7 +629,7 @@ Indexes should exist on foreign keys (`category_id`, `question_id`, `user_id`) f
 2. The **timer** starts; selections are stored in component state.  
 3. Navigation via sidebar/prev/next keeps selection state intact.  
 4. On last question, **Submit** button appears.  
-5. Client posts submission payload to `/api/quiz/submit/`.  
+5. Client posts submission payload to `/api/quiz/displayResult/`.  
 6. Server validates, computes result, stores answers, and returns score.  
 7. Client navigates to **DisplayResult** page with score & summary.
 
@@ -776,18 +776,14 @@ VITE_ANALYTICS_ON=true
 
 ### Example `server/.env`
 ```
-DJANGO_SECRET_KEY=replace-me
-DJANGO_DEBUG=False
-DB_ENGINE=django.db.backends.postgresql
-DB_NAME=online_test
-DB_USER=postgres
-DB_PASSWORD=strong-password
-DB_HOST=postgres
-DB_PORT=5432
+DJANGO_DEBUG=True
+DB_ENGINE=django.db.backends.sqlite3
+DB_NAME=db.sqlite3
 JWT_SECRET=replace-me
-JWT_ACCESS_TTL=900
-JWT_REFRESH_TTL=2592000
-CORS_ALLOWED_ORIGINS=https://app.example.com
+JWT_ACCESS_TTL=900       # 15 minutes
+JWT_REFRESH_TTL=2592000  # 30 days
+CORS_ALLOWED_ORIGINS=http://localhost:5173
+SECRET_KEY = currently hardcoded in settings.py
 ```
 
 ### Example DRF Settings Snippet
