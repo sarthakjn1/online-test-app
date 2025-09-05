@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useRef ,useCallback} from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../../styles/quiz.css";
@@ -18,73 +18,24 @@ const Quiz = () => {
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(0);
 
+  const intervalRef = useRef();
+  const hasSubmittedRef = useRef(false);
+
+
+
   useEffect(() => {
     axios
       .get(`http://127.0.0.1:8000/api/quiz/question/by-category/${categoryId}/`)
       .then((res) => {
         setQuizData(res.data);
         setTimeLeft(res.data.totalTime * 60); // dynamic time
+      
       })
       .catch((err) => {
         console.error("Error fetching quiz data:", err);
       });
   }, [categoryId]);
-
-
-  // Timer countdown with auto-submit
-  useEffect(() => {
-    if (results) return; // stop timer after submit
-
-    const interval = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          clearInterval(interval);
-          handleSubmit(true); // auto-submit when time is up
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [results]);
-
-  // Save time per question
-  useEffect(() => {
-    return () => {
-      const spent = Math.floor((Date.now() - startTime) / 1000);
-      setQuestionTimes((prev) => ({
-        ...prev,
-        [currentQ]: (prev[currentQ] || 0) + spent,
-      }));
-    };
-  }, [currentQ]);
-
-  const handleAnswer = (qid, optionId) => {
-    if (results) return;
-    setAnswers((prev) => {
-      if (prev[qid] === optionId) {
-        const updated = { ...prev };
-        delete updated[qid];
-        return updated;
-      }
-      return { ...prev, [qid]: optionId };
-    });
-  };
-
-  // calcuate total time 
-
-
-  function formatTime(seconds) {
-    const h = Math.floor(seconds / 3600);
-    const m = Math.floor((seconds % 3600) / 60);
-    const s = seconds % 60;
-    return `${h}:${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
-  }
-
-
-
-
+  
   const handleSubmit = async () => {
     if (!quizData) return;
 
@@ -155,18 +106,18 @@ const Quiz = () => {
         const examJourneyData = res.data;
         console.log(examJourneyData)
         const resultRes = await axios.post("http://127.0.0.1:8000/api/quiz/results/exam_result/", UsersresultPayload);
-        return { examJourneyData, resultRes: resultRes.data};
+        return { examJourneyData, resultRes: resultRes.data };
       })
       .then(({ examJourneyData, resultRes }) => {
         console.log(examJourneyData)
         console.log("Result saved successfully:", resultRes.data);
         navigate("/displayresult", {
           state: {
-            quizData:quizData,
+            quizData: quizData,
             user: examJourneyData.user_journey,
             exam: resultRes.exam,
             score: resultRes.score,
-            total_marks : resultRes.total_marks
+            total_marks: resultRes.total_marks
           }
         })
       })
@@ -176,6 +127,70 @@ const Quiz = () => {
 
 
   };
+
+   // Make handleSubmit stable
+  const stableHandleSubmit = useCallback(() => {
+    handleSubmit();
+  }, [handleSubmit]);
+
+useEffect(() => {
+    intervalRef.current = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          if (!hasSubmittedRef.current) {
+            console.log("timeout");
+            hasSubmittedRef.current = true; // mark as submitted
+            clearInterval(intervalRef.current);
+            console.log("submitting");
+            handleSubmit();
+          }
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(intervalRef.current);
+  }, [handleSubmit]);
+  
+  
+  // Save time per question
+  useEffect(() => {
+    return () => {
+      const spent = Math.floor((Date.now() - startTime) / 1000);
+      setQuestionTimes((prev) => ({
+        ...prev,
+        [currentQ]: (prev[currentQ] || 0) + spent,
+      }));
+    };
+  }, [currentQ]);
+
+  const handleAnswer = (qid, optionId) => {
+    if (results) return;
+    setAnswers((prev) => {
+      if (prev[qid] === optionId) {
+        const updated = { ...prev };
+        delete updated[qid];
+        return updated;
+      }
+      return { ...prev, [qid]: optionId };
+    });
+  };
+
+  // calcuate total time 
+
+
+  function formatTime(seconds) {
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = seconds % 60;
+    return `${h}:${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+  }
+
+
+
+
+
 
 
 

@@ -142,19 +142,27 @@ client/
    │  └─ user_friendly_feature_icon.png
    │
    ├─ components/
-   │  ├─ AnalyticsDashboard.jsx
-   │  ├─ CategoryAttemptsTable.jsx
-   │  ├─ CategoryPerformanceChart.jsx
-   │  ├─ DisplayResult.jsx
-   │  ├─ Home.jsx
-   │  ├─ Instructions.jsx
-   │  ├─ Login.jsx
-   │  ├─ OverallStats.jsx
-   │  ├─ ProtectedRoute.jsx
-   │  ├─ Quiz.jsx
-   │  ├─ Register.jsx
-   │  └─ TopUsersTable.jsx
-   │
+      ├─analytics/
+        ├─ AnalyticsDashboard.jsx
+        ├─ CategoryAttemptsTable.jsx
+        ├─ CategoryPerformanceChart.jsx
+        ├─ DailyTrendsCharts.jsx
+        ├─ OverallStats.jsx
+        ├─ ScoreDistributionChart.jsx
+        └─ TopUsersTable.jsx
+      ├─quizapp/
+        ├─ BulkQuestionForm.jsx
+        ├─ InstructorHome.jsx
+        ├─ DisplayResult.jsx
+        ├─ Instructions.jsx
+        ├─ Quiz.jsx
+      ├─usermgmt
+        ├─ Home.jsx
+        ├─ Login.jsx
+        ├─ ProtectedRoute.jsx
+        ├─ Register.jsx
+   |
+   |
    ├─ styles/
    │  ├─ displayResult.css
    │  ├─ home.css
@@ -238,7 +246,13 @@ server/
 │  ├─ serializers.py
 │  ├─ urls.py
 │  └─ tests.py
-│
+│-server/
+│  ├─ asgi.py
+│  ├─ settings.py
+│  ├─ urls.py
+│  ├─ wsgi.py
+│  
+|
 ├─ usermanagement/
 │  ├─ migrations/
 │  ├─ models.py
@@ -270,6 +284,12 @@ server/
   - **models.py**: custom `User` if needed or Django default.
   - **views.py**: registration, login, JWT integration.
   - **serializers.py**: user DTOs and auth serializers.
+
+- **server**
+ - **asgi.py** – ASGI configuration for async support.
+ - **wsgi.py** – WSGI configuration for deployment.
+ - **settings.py** – Django settings, installed apps, middleware, database config, JWT, etc.
+ - **urls.py** – Main URL router that includes app URLs.
 
 ### Request Lifecycle
 
