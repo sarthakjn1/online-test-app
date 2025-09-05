@@ -19,6 +19,15 @@ const BulkQuestionForm = () => {
     ],
   });
 
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user_id");
+    localStorage.removeItem("usercategory");
+
+    navigate("/")
+  };
+
   const handleCategoryChange = (e) => {
     setCategory(e.target.value);
     setCurrentQuestion({ ...currentQuestion, category: e.target.value });
@@ -86,7 +95,7 @@ const BulkQuestionForm = () => {
         <div className="back-btn">
           <button
             className="btn btn-danger"
-            onClick={() => navigate("/instructor-home")}
+            onClick={handleLogout}
           >
             Back
           </button>
