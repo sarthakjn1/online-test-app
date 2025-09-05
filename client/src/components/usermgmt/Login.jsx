@@ -24,9 +24,9 @@ const Login = () => {
       // Save JWT token + user id
       localStorage.setItem("token", response.data.access);
       localStorage.setItem("user_id", response.data.user_id);
-      localStorage.setItem("usertype", response.data.usertype);
+      localStorage.setItem("usercategory", response.data.usercategory);
 
-      if (response.data.usertype && response.data.usertype === 1){
+      if (response.data.usercategory && response.data.usercategory === 1){
         navigate("/instructions");
       }
       else{
