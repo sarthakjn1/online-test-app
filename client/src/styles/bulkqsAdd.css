@@ -1,0 +1,17 @@
+.add-question-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* Full screen height */
+  background: #f5f7fa; /* Light gray bg */
+  padding: 20px;
+}
+
+.add-question-card {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 900px; /* Form stays wide */
+}

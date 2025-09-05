@@ -716,6 +716,7 @@ npm run dev
 
 ### Environment Variables
 Create `.env` files for both client & server. Examples in [Appendix](#appendix-sample-configs).
+currently the functinality is added in settings.py file
 
 ---
 

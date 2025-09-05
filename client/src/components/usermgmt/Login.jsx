@@ -25,8 +25,12 @@ const Login = () => {
       localStorage.setItem("token", response.data.access);
       localStorage.setItem("user_id", response.data.user_id);
       localStorage.setItem("usertype", response.data.usertype);
+      localStorage.setItem("category",response.data.category)
 
-      if (response.data.usertype && response.data.usertype === 1){
+      console.log("dsfsf",response.data.usertype)
+      console.log(response.data.category_id)
+
+      if (response.data.usertype && response.data.category === 1){
         navigate("/instructions");
       }
       else{

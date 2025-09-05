@@ -1,0 +1,143 @@
+/* home_instructor.css */
+
+body {
+  font-family: 'Inter', sans-serif;
+}
+.home-instructor-subtitle {
+  position: relative;
+  z-index: 2;
+  font-size: 1.1rem;
+  color: #374151;
+  margin-bottom: 2rem;
+}
+.home-instructor-container {
+  min-height: 100vh;
+  background: url("../assets/admin_image1.jpg") no-repeat center center/cover;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; /* pushes content from top */
+  padding-top: 100px; /* pushes content down */
+  text-align: center;
+  position: relative;
+}
+
+.home-instructor-header {
+  position: relative;
+  z-index: 2;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #1f2937; /* dark color for better visibility */
+  margin-top: 30px;
+  margin-bottom: 1rem;
+  text-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2); /* makes text pop */
+}
+
+.home-instructor-header h1 {
+    display: grid;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+.home-instructor-header p {
+    display: grid;
+  font-size: 1.1rem;
+  color: #4b5563;
+}
+
+.home-instructor-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2.5rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.home-instructor-card {
+  background: #ffffff;
+  border: 2px solid transparent;
+  border-radius: 1.25rem;
+  padding: 2rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.home-instructor-card:hover {
+  border-color: #6366f1;
+  transform: translateY(-4px);
+}
+
+.home-instructor-card h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.home-instructor-card p {
+  color: #6b7280;
+  margin-bottom: 1.5rem;
+}
+
+.home-instructor-button {
+  padding: 0.6rem 1.5rem;
+  border-radius: 0.75rem;
+  background: #4f46e5;
+  color: white;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.home-instructor-button:hover {
+  background: #4338ca;
+}
+.html, body, #root {
+  height: 100%;
+  width : 100%;
+  margin: 0;           /* removes the white gap around the page */
+}
+
+.home-instructor-container {
+  min-height: 100vh;
+  background: url("../assets/admin_image1.jpg");
+    /* no-repeat center center/cover; */
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  position: relative;
+}
+
+.home-instructor-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.6); /* lighter overlay for readability */
+  z-index: 1;
+}
+
+.home-instructor-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.home-instructor-header-box {
+  background: rgba(255, 255, 255, 0.9); /* white with slight transparency */
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+  margin-top: 40px;
+  max-width: 800px;
+  width: 100%;
+  text-align: center;
+}

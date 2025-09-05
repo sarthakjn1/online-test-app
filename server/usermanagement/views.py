@@ -67,6 +67,7 @@ def login_user(request):
         "message": "Login successful",
         "user_id": user.id,
         "usertype": user.usertype.id,
+        "category" : user.category_id,
         "access": access_token,
         "refresh": refresh_token,
     }, status=status.HTTP_200_OK)
