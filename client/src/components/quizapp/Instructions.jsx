@@ -14,6 +14,8 @@ function Instructions() {
         localStorage.removeItem("token");
         localStorage.removeItem("user_id");
         localStorage.removeItem("usercategory");
+        localStorage.removeItem("refresh_token");
+        
 
         alert("Logged out successfully!");
 

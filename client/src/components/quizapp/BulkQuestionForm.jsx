@@ -24,6 +24,7 @@ const BulkQuestionForm = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user_id");
     localStorage.removeItem("usercategory");
+    localStorage.removeItem("refresh_token");
 
     navigate("/")
   };

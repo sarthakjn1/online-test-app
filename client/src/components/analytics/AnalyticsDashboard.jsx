@@ -20,7 +20,8 @@ const AnalyticsDashboard = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user_id");
-    localStorage.removeItem("usertype");
+    localStorage.removeItem("usercategory");
+    localStorage.removeItem("refresh_token");
     alert("Logged out successfully!");
 
     navigate("/")

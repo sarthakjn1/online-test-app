@@ -23,6 +23,7 @@ const Login = () => {
 
       // Save JWT token + user id
       localStorage.setItem("token", response.data.access);
+      localStorage.setItem("refresh_token", response.data.refresh);
       localStorage.setItem("user_id", response.data.user_id);
       localStorage.setItem("usercategory", response.data.usercategory);
 
