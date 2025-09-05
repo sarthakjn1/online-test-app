@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import '../../styles/bulkqsAdd.css';
 
 const BulkQuestionForm = () => {
-  const navigate =useNavigate()
+  const navigate = useNavigate();
   const [questions, setQuestions] = useState([]);
   const [category, setCategory] = useState(1);
   const [currentQuestion, setCurrentQuestion] = useState({
@@ -19,25 +19,21 @@ const BulkQuestionForm = () => {
     ],
   });
 
-  // Update category
   const handleCategoryChange = (e) => {
     setCategory(e.target.value);
     setCurrentQuestion({ ...currentQuestion, category: e.target.value });
   };
 
-  // Update question text
   const handleQuestionChange = (e) => {
     setCurrentQuestion({ ...currentQuestion, question_txt: e.target.value });
   };
 
-  // Update option text
   const handleOptionChange = (index, e) => {
     const newOptions = [...currentQuestion.options];
     newOptions[index].option_text = e.target.value;
     setCurrentQuestion({ ...currentQuestion, options: newOptions });
   };
 
-  // Mark correct option
   const handleCorrectChange = (index) => {
     const newOptions = currentQuestion.options.map((opt, i) => ({
       ...opt,
@@ -46,7 +42,6 @@ const BulkQuestionForm = () => {
     setCurrentQuestion({ ...currentQuestion, options: newOptions });
   };
 
-  // Save current question to list and clear form
   const handleSaveQuestion = () => {
     setQuestions([...questions, currentQuestion]);
     setCurrentQuestion({
@@ -62,13 +57,12 @@ const BulkQuestionForm = () => {
     });
   };
 
-  // Submit all saved questions to backend
   const handleSubmitAll = async () => {
     try {
       const payload = { questions };
       await axios.post("http://127.0.0.1:8000/api/quiz/question/bulk-add/", payload);
       alert("All questions submitted successfully!");
-      setQuestions([]); // clear stored questions after submit
+      setQuestions([]);
       setCurrentQuestion({
         category: 1,
         question_txt: "",
@@ -87,26 +81,22 @@ const BulkQuestionForm = () => {
   };
 
   return (
-    <div className="d-flex justify-content-center mt-4" style={{ width: "100%" }}>
-      <button
-        className="btn btn-danger position-absolute"
-        style={{ top: "20px", right: "20px" }}
-        onClick={() => navigate("/instructor-home")}
-      >
-        Back
-      </button>
-      <div
-        className="card p-4 shadow"
-        style={{
-          width: "80%",
-          marginLeft:"550px",        // takes 80% of screen width
-          maxWidth: "1600px",  // won’t go beyond this
-          minWidth: "600px"    // won’t shrink too much
-        }}
-      >
+    <div className="question-form-container">
+      {/* Back button */}
+        <div className="back-btn">
+          <button
+            className="btn btn-danger"
+            onClick={() => navigate("/instructor-home")}
+          >
+            Back
+          </button>
+        </div>
+      <div className="add-question-card">
+        
 
-        <h3 className="mb-3">Add Quiz Question</h3>
-        {/* Question text */}
+        <h3 className="mb-3 text-center">Add Quiz Question</h3>
+
+        {/* Category */}
         <div className="mb-3">
           <label className="form-label">Category ID:</label>
           <input
@@ -143,24 +133,24 @@ const BulkQuestionForm = () => {
                 type="radio"
                 checked={opt.is_correct}
                 onChange={() => handleCorrectChange(index)}
-              />{"  "}
+              />
               Correct
             </div>
           </div>
         ))}
-        <br />
 
         {/* Buttons */}
-        <button className="btn btn-primary me-2" onClick={handleSaveQuestion}>
-          Save & Next
-        </button>
-        <br />
-        <button className="btn btn-success" onClick={handleSubmitAll}>
-          Submit All
-        </button>
+        <div className="mt-4 d-flex justify-content-between">
+          <button className="btn btn-primary" onClick={handleSaveQuestion}>
+            Save & Next
+          </button>
+          <button className="btn btn-success" onClick={handleSubmitAll}>
+            Submit All
+          </button>
+        </div>
 
         {/* Preview saved questions count */}
-        <div className="mt-3">
+        <div className="mt-3 text-center">
           <strong>{questions.length}</strong> question(s) saved so far
         </div>
       </div>
