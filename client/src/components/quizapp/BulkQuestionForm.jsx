@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 
 const BulkQuestionForm = () => {
+  const navigate =useNavigate()
   const [questions, setQuestions] = useState([]);
   const [category, setCategory] = useState(1);
   const [currentQuestion, setCurrentQuestion] = useState({
@@ -67,16 +70,16 @@ const BulkQuestionForm = () => {
       alert("All questions submitted successfully!");
       setQuestions([]); // clear stored questions after submit
       setCurrentQuestion({
-      category: 1,
-      question_txt: "",
-      isEnabled: true,
-      options: [
-        { option_text: "", is_correct: false, isEnabled: true },
-        { option_text: "", is_correct: false, isEnabled: true },
-        { option_text: "", is_correct: false, isEnabled: true },
-        { option_text: "", is_correct: false, isEnabled: true },
-      ],
-    });
+        category: 1,
+        question_txt: "",
+        isEnabled: true,
+        options: [
+          { option_text: "", is_correct: false, isEnabled: true },
+          { option_text: "", is_correct: false, isEnabled: true },
+          { option_text: "", is_correct: false, isEnabled: true },
+          { option_text: "", is_correct: false, isEnabled: true },
+        ],
+      });
     } catch (error) {
       console.error(error);
       alert("Error submitting questions!");
@@ -84,8 +87,24 @@ const BulkQuestionForm = () => {
   };
 
   return (
-    <div className="d-flex justify-content-center mt-4">
-      <div className="card p-4 shadow" style={{ marginLeft: '600px', maxWidth: "800px", width: "100%" }}>
+    <div className="d-flex justify-content-center mt-4" style={{ width: "100%" }}>
+      <button
+        className="btn btn-danger position-absolute"
+        style={{ top: "20px", right: "20px" }}
+        onClick={() => navigate("/instructor-home")}
+      >
+        Back
+      </button>
+      <div
+        className="card p-4 shadow"
+        style={{
+          width: "80%",
+          marginLeft:"550px",        // takes 80% of screen width
+          maxWidth: "1600px",  // won’t go beyond this
+          minWidth: "600px"    // won’t shrink too much
+        }}
+      >
+
         <h3 className="mb-3">Add Quiz Question</h3>
         {/* Question text */}
         <div className="mb-3">
@@ -125,7 +144,7 @@ const BulkQuestionForm = () => {
                 checked={opt.is_correct}
                 onChange={() => handleCorrectChange(index)}
               />{"  "}
-               Correct
+              Correct
             </div>
           </div>
         ))}
