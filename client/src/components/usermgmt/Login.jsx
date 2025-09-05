@@ -24,13 +24,9 @@ const Login = () => {
       // Save JWT token + user id
       localStorage.setItem("token", response.data.access);
       localStorage.setItem("user_id", response.data.user_id);
-      localStorage.setItem("usertype", response.data.usertype);
-      localStorage.setItem("category",response.data.category)
+      localStorage.setItem("usercategory", response.data.usercategory);
 
-      console.log("dsfsf",response.data.usertype)
-      console.log(response.data.category_id)
-
-      if (response.data.usertype && response.data.category === 1){
+      if (response.data.usercategory && response.data.usercategory === 1){
         navigate("/instructions");
       }
       else{
@@ -79,7 +75,7 @@ const Login = () => {
 
           <form onSubmit={handleLogin} className="login-form">
             <div className="form-group mb-3">
-              <label>Username</label>
+              <label className='form-label'>Username</label>
               <input
                 type="text"
                 className="form-control"
@@ -91,7 +87,7 @@ const Login = () => {
             </div>
 
             <div className="form-group mb-3">
-              <label>Password</label>
+              <label className='form-label'>Password</label>
               <input
                 type="password"
                 className="form-control"

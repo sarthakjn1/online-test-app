@@ -5,7 +5,7 @@
   align-items: center;
   height: 100vh;   /* full viewport height */
   width: 100vw;    /* full viewport width */
-  background: linear-gradient(to right, #667eea, #764ba2);
+  background: url("../assets/admin_image1.jpg") no-repeat center center/cover;
 }
 
 
@@ -27,4 +27,11 @@
 
 .btn-primary:hover {
   background-color: #5563c1;
+}
+
+.register-btn{
+  display: block;
+  max-width: 100px;
+  margin: 20px auto;
+  background-color: #4f46e5
 }

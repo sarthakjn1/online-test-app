@@ -3,11 +3,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  background: url("../assets/admin_image1.jpg") no-repeat center center/cover;
   height: 100vh;   /* full viewport height */
   width: 100vw;    /* full viewport width */
-  background: linear-gradient(to right, #667eea, #764ba2);
 }
-
 
 
 .card {
@@ -32,6 +31,7 @@
   display: block;
   max-width: 80px;
   margin: 20px auto;
+  background-color: #4f46e5
 }
 
 .btn-primary:hover {

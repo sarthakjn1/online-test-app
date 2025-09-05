@@ -119,7 +119,7 @@ const Register = () => {
             </div>
 
             <div className="d-grid">
-              <button type="submit" className="btn btn-primary btn-lg rounded-3" disabled={loading}>
+              <button type="submit" className="register-btn btn btn-primary btn-block w-100" disabled={loading}>
                 {loading ? "Registering..." : "Register"}
               </button>
             </div>

@@ -13,7 +13,7 @@ function Instructions() {
     const handleLogout = () => {
         localStorage.removeItem("token");
         localStorage.removeItem("user_id");
-        localStorage.removeItem("usertype");
+        localStorage.removeItem("usercategory");
 
         alert("Logged out successfully!");
 
