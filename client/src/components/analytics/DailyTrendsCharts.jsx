@@ -5,8 +5,16 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'r
 const DailyTrendsChart = () => {
   const [data, setData] = useState([]);
 
+  token = localStorage.getItem("token");
+
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/api/analytics/user/daily-trends/')
+    
+    axios.get('http://127.0.0.1:8000/api/analytics/user/daily-trends/', {
+      headers: {
+        Authorization: `Bearer ${token}`, // JWT token
+        "Content-Type": "application/json"
+      }
+    })
       .then(res => setData(res.data))
       .catch(err => console.error(err))
   }, []);

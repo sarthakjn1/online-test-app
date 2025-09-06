@@ -1,5 +1,6 @@
 from rest_framework.decorators import api_view
 import jwt
+import uuid
 from rest_framework.response import Response
 from rest_framework import status
 from django.conf import settings
@@ -48,16 +49,20 @@ def login_user(request):
 
     # Generate tokens
     payload = {
+        "token_type": "access",
         "user_id": user.id,
         "username": user.username,
+        "jti": str(uuid.uuid4()),
         "exp": datetime.utcnow() + timedelta(minutes=30),
         "iat": datetime.utcnow(),
     }
     access_token = jwt.encode(payload, settings.SECRET_KEY, algorithm="HS256")
 
     refresh_payload = {
+        "token_type": "refresh",
         "user_id": user.id,
         "username": user.username,
+        "jti": str(uuid.uuid4()),
         "exp": datetime.utcnow() + timedelta(days=7),
         "iat": datetime.utcnow(),
     }

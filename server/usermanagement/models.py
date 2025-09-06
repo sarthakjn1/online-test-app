@@ -30,6 +30,18 @@ class User(models.Model):
     is_active = models.BooleanField(default=True)
     registered_on = models.DateTimeField(auto_now_add=True)
 
+    USERNAME_FIELD = "username"
+    REQUIRED_FIELDS = []
+
+    @property
+    def is_anonymous(self):
+        return False
+
+    @property
+    def is_authenticated(self):
+        return True
+
+
     def set_password(self, raw_password):
         self.password = make_password(raw_password)
 

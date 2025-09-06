@@ -5,8 +5,15 @@ import { Table, Card } from "react-bootstrap";
 const TopUsersTable = () => {
   const [users, setUsers] = useState([]);
 
+  token = localStorage.getItem("token");
+
   useEffect(() => {
-    axios.get("http://127.0.0.1:8000/api/analytics/user/avg/")
+    axios.get("http://127.0.0.1:8000/api/analytics/user/avg/", {
+      headers: {
+        Authorization: `Bearer ${token}`, // JWT token
+        "Content-Type": "application/json"
+      }
+    })
       .then((res) => {
         const sorted = res.data.sort((a, b) => b.avg_score - a.avg_score);
         setUsers(sorted.slice(0, 5)); // top 5 users

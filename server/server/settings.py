@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
+from corsheaders.defaults import default_headers
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -49,18 +51,25 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # React dev server
 ]
 
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    "content-type",
+    "authorization",
+]
+
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
        'rest_framework_simplejwt.authentication.JWTAuthentication'   # our custom JWT auth
     ]
 }
-
-JWT_SETTINGS = {
-    "ALGORITHM": "HS256",
-    "ACCESS_TOKEN_LIFETIME_MIN": 15,
-    "REFRESH_TOKEN_LIFETIME_DAYS": 7,
+# SimpleJWT settings (customize as needed)
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=300),  # Access token validity
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),    # Refresh token validity
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True
 }
 
+AUTH_USER_MODEL = "usermanagement.User"
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
@@ -74,6 +83,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'server.urls'
+
+DEFAULT_AUTHENTICATION_CLASSES = ['JWTAuthentication']
 
 TEMPLATES = [
     {

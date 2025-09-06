@@ -7,6 +7,7 @@ const BulkQuestionForm = () => {
   const navigate = useNavigate();
   const [questions, setQuestions] = useState([]);
   const [category, setCategory] = useState(1);
+  const token = localStorage.getItem("token");
   const [currentQuestion, setCurrentQuestion] = useState({
     category: category,
     question_txt: "",
@@ -70,7 +71,12 @@ const BulkQuestionForm = () => {
   const handleSubmitAll = async () => {
     try {
       const payload = { questions };
-      await axios.post("http://127.0.0.1:8000/api/quiz/question/bulk-add/", payload);
+      
+      await axios.post("http://127.0.0.1:8000/api/quiz/question/bulk-add/", payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      });
       alert("All questions submitted successfully!");
       setQuestions([]);
       setCurrentQuestion({
@@ -93,16 +99,16 @@ const BulkQuestionForm = () => {
   return (
     <div className="question-form-container">
       {/* Back button */}
-        <div className="back-btn">
-          <button
-            className="btn btn-danger"
-            onClick={handleLogout}
-          >
-            Back
-          </button>
-        </div>
+      <div className="back-btn">
+        <button
+          className="btn btn-danger"
+          onClick={handleLogout}
+        >
+          Back
+        </button>
+      </div>
       <div className="add-question-card">
-        
+
 
         <h3 className="mb-3 text-center">Add Quiz Question</h3>
 

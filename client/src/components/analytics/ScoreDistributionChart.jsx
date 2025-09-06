@@ -7,8 +7,15 @@ const COLORS = ['#FF8042', '#00C49F', '#0088FE'];
 const ScoreDistributionChart = () => {
   const [data, setData] = useState([]);
 
+  token = localStorage.getItem("token");
+
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/api/analytics/user/score-distribution/')
+    axios.get('http://127.0.0.1:8000/api/analytics/user/score-distribution/', {
+      headers: {
+        Authorization: `Bearer ${token}`, // JWT token
+        "Content-Type": "application/json"
+      }
+    })
       .then(res => {
         const formatted = Object.entries(res.data).map(([name, value]) => ({
           name, value
@@ -29,7 +36,7 @@ const ScoreDistributionChart = () => {
         </Pie>
         <br />
         <Tooltip />
-        
+
         <Legend />
       </PieChart>
     </div>

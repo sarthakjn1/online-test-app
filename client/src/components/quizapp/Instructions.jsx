@@ -15,7 +15,7 @@ function Instructions() {
         localStorage.removeItem("user_id");
         localStorage.removeItem("usercategory");
         localStorage.removeItem("refresh_token");
-        
+
 
         alert("Logged out successfully!");
 
@@ -28,9 +28,13 @@ function Instructions() {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const res = await axios.get("http://127.0.0.1:8000/api/quiz/master_category/");
+                const token = localStorage.getItem("token");
+                const res = await axios.get("http://127.0.0.1:8000/api/quiz/master_category/", {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    }
+                });
                 setCategories(res.data);
-                console.log("Fetched categories:", res.data);
             } catch (error) {
                 console.error("Error fetching categories:", error);
             }

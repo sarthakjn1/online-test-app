@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useRef ,useCallback} from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../../styles/quiz.css";
@@ -20,22 +20,28 @@ const Quiz = () => {
 
   const intervalRef = useRef();
   const hasSubmittedRef = useRef(false);
+  const token = localStorage.getItem("token");
 
 
 
   useEffect(() => {
     axios
-      .get(`http://127.0.0.1:8000/api/quiz/question/by-category/${categoryId}/`)
+      .get(`http://127.0.0.1:8000/api/quiz/question/by-category/${categoryId}/`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // JWT token
+          "Content-Type": "application/json"
+        }
+      })
       .then((res) => {
         setQuizData(res.data);
         setTimeLeft(res.data.totalTime * 60); // dynamic time
-      
+
       })
       .catch((err) => {
         console.error("Error fetching quiz data:", err);
       });
   }, [categoryId]);
-  
+
   const handleSubmit = async () => {
     if (!quizData) return;
 
@@ -57,7 +63,6 @@ const Quiz = () => {
 
     // const userId = user?.user_id;
     const userId = JSON.parse(localStorage.getItem("user_id"));
-    console.log(userId)
     // Prepare JSON to send to backend
     const analyticsData = quizData.questions.map((q, index) => {
       const selectedOptionId = answers[q.id];
@@ -74,10 +79,8 @@ const Quiz = () => {
         time_taken: questionTimes[index] || 0,
       };
     });
-    console.log(analyticsData)
     const totalSeconds = analyticsData.reduce((acc, q) => acc + Number(q.time_taken || 0), 0);
 
-    // console.log("Analytics JSON", analyticsData);
     const category_id = parseInt(categoryId)
     const ExamManagement_payload = {
       user: userId,
@@ -85,14 +88,14 @@ const Quiz = () => {
       user_journey: analyticsData
     };
 
-    console.log(ExamManagement_payload)
 
-
-    await axios.post("http://127.0.0.1:8000/api/quiz/results/exam_journey/", ExamManagement_payload)
+    await axios.post("http://127.0.0.1:8000/api/quiz/results/exam_journey/", ExamManagement_payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    })
       .then(async (res) => {
-        console.log("Saved successfully:", res.data.user_data);
-        console.log(res.data)
-
         const UsersresultPayload = {
           user: userId,
           exam: res.data.id,   // directly use exam_id
@@ -102,15 +105,16 @@ const Quiz = () => {
           total_time: totalSeconds
         };
 
-        console.log(UsersresultPayload)
         const examJourneyData = res.data;
-        console.log(examJourneyData)
-        const resultRes = await axios.post("http://127.0.0.1:8000/api/quiz/results/exam_result/", UsersresultPayload);
+        const resultRes = await axios.post("http://127.0.0.1:8000/api/quiz/results/exam_result/", UsersresultPayload, {
+          headers: {
+            Authorization: `Bearer ${token}`, // JWT token
+            "Content-Type": "application/json"
+          }
+        });
         return { examJourneyData, resultRes: resultRes.data };
       })
       .then(({ examJourneyData, resultRes }) => {
-        console.log(examJourneyData)
-        console.log("Result saved successfully:", resultRes.data);
         navigate("/displayresult", {
           state: {
             quizData: quizData,
@@ -122,26 +126,24 @@ const Quiz = () => {
         })
       })
       .catch((error) => {
-        console.error("Error in saving exam or result:", error);
+        alert("Error saving the quiz")
       });
 
 
   };
 
-   // Make handleSubmit stable
+  // Make handleSubmit stable
   const stableHandleSubmit = useCallback(() => {
     handleSubmit();
   }, [handleSubmit]);
 
-useEffect(() => {
+  useEffect(() => {
     intervalRef.current = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
           if (!hasSubmittedRef.current) {
-            console.log("timeout");
             hasSubmittedRef.current = true; // mark as submitted
             clearInterval(intervalRef.current);
-            console.log("submitting");
             handleSubmit();
           }
           return 0;
@@ -152,8 +154,8 @@ useEffect(() => {
 
     return () => clearInterval(intervalRef.current);
   }, [handleSubmit]);
-  
-  
+
+
   // Save time per question
   useEffect(() => {
     return () => {

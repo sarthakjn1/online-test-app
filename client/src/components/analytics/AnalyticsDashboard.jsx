@@ -14,6 +14,8 @@ const AnalyticsDashboard = () => {
   const [overallStats, setOverallStats] = useState({});
   const [loading, setLoading] = useState(true);
 
+  token = localStorage.getItem("token");
+
   const navigate = useNavigate();
 
 
@@ -30,9 +32,20 @@ const AnalyticsDashboard = () => {
   useEffect(() => {
     const fetchAnalytics = async () => {
       try {
+        token = localStorage.getItem("token");
         const [catPerfRes, overallRes] = await Promise.all([
-          axios.get("http://127.0.0.1:8000/api/analytics/category/performance/"),
-          axios.get("http://127.0.0.1:8000/api/analytics/overall/"),
+          axios.get("http://127.0.0.1:8000/api/analytics/category/performance/", {
+            headers: {
+              Authorization: `Bearer ${token}`, // JWT token
+              "Content-Type": "application/json"
+            }
+          }),
+          axios.get("http://127.0.0.1:8000/api/analytics/overall/", {
+            headers: {
+              Authorization: `Bearer ${token}`, // JWT token
+              "Content-Type": "application/json"
+            }
+          }),
         ]);
         setCategoryPerformance(catPerfRes.data);
         setOverallStats(overallRes.data);
