@@ -5,7 +5,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'r
 const DailyTrendsChart = () => {
   const [data, setData] = useState([]);
 
-  token = localStorage.getItem("token");
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     

@@ -7,7 +7,7 @@ const COLORS = ['#FF8042', '#00C49F', '#0088FE'];
 const ScoreDistributionChart = () => {
   const [data, setData] = useState([]);
 
-  token = localStorage.getItem("token");
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     axios.get('http://127.0.0.1:8000/api/analytics/user/score-distribution/', {

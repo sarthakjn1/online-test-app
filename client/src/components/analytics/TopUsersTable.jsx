@@ -5,7 +5,7 @@ import { Table, Card } from "react-bootstrap";
 const TopUsersTable = () => {
   const [users, setUsers] = useState([]);
 
-  token = localStorage.getItem("token");
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     axios.get("http://127.0.0.1:8000/api/analytics/user/avg/", {
