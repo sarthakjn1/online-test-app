@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 from corsheaders.defaults import default_headers
+# settings.py
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -63,8 +65,8 @@ REST_FRAMEWORK = {
 }
 # SimpleJWT settings (customize as needed)
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=300),  # Access token validity
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),    # Refresh token validity
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),  # Access token validity
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),    # Refresh token validity
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True
 }

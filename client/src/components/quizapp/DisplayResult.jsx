@@ -22,7 +22,7 @@ const DisplayResult = () => {
 
   // Map user answers for quick lookup
   const userAnswers = {};
-  if (user && Array.isArray(user)) {
+  if (user) {
     user.forEach((ans) => {
       userAnswers[ans.question_id] = ans;
     });
@@ -56,7 +56,7 @@ const DisplayResult = () => {
       {currentQuestions && currentQuestions.length > 0 ? (
         currentQuestions.map((q, idx) => {
           const userAns = userAnswers[q.id];
-          const selectedAnswer = userAns?.selected_option || "Not Answered";
+          const selectedAnswer = userAns?.selected_option_id || "Not Answered";
 
           return (
             <div key={q.id} className="card shadow-sm p-4 mb-4 question-card">
@@ -66,8 +66,8 @@ const DisplayResult = () => {
 
               <ul className="list-group mt-3">
                 {q.options.map((opt) => {
-                  const isCorrect = opt.isCorrect;
-                  const isUserSelected = userAns?.selected_option === opt.option_text;
+                  const isCorrect = opt.is_correct;
+                  const isUserSelected = opt?.selected_option;
 
                   // highlight logic
                   let itemClass = "";

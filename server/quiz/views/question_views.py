@@ -4,6 +4,7 @@ from rest_framework import status
 import random
 from ..models import Question, MasterCategory
 from ..serializers import QuestionSerializer, BulkQuestionCreateSerializer
+from ..utils.encryption import encrypt_flag
 
 @api_view(["POST"])
 def add_question(request):
@@ -81,8 +82,7 @@ def get_category_questions(request, category_id):
         options_data = [
             {
                 "id": opt.id,
-                "option_text": opt.option_text,
-                "isCorrect": opt.is_correct  # flag correct answer
+                "option_text": opt.option_text
             }
             for opt in options
         ]
