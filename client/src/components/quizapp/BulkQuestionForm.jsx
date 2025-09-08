@@ -19,7 +19,9 @@ const BulkQuestionForm = () => {
       { option_text: "", is_correct: false, isEnabled: true },
     ],
   });
-
+  const goToInstructorHome = () => {
+    navigate("/instructor-home");
+  }
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -71,7 +73,7 @@ const BulkQuestionForm = () => {
   const handleSubmitAll = async () => {
     try {
       const payload = { questions };
-      
+
       await axios.post("http://127.0.0.1:8000/api/quiz/question/bulk-add/", payload, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -101,10 +103,16 @@ const BulkQuestionForm = () => {
       {/* Back button */}
       <div className="back-btn">
         <button
+          className="btn btn-primary"
+          onClick={goToInstructorHome}
+        >
+          Back
+        </button>
+        <button
           className="btn btn-danger"
           onClick={handleLogout}
         >
-          Back
+          Home
         </button>
       </div>
       <div className="add-question-card">

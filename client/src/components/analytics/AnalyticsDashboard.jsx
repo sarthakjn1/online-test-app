@@ -18,7 +18,9 @@ const AnalyticsDashboard = () => {
 
   const navigate = useNavigate();
 
-
+  const goToInstructorHome = () => {
+    navigate("/instructor-home");
+  }
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user_id");
@@ -101,6 +103,12 @@ const AnalyticsDashboard = () => {
 
       {/* Logout Button */}
       <div className="position-absolute top-0 end-0 m-3">
+        <button
+          className="btn btn-primary"
+          onClick={goToInstructorHome}
+        >
+          Back
+        </button>
         <button className="btn btn-danger px-4" onClick={handleLogout}>
           Logout
         </button>

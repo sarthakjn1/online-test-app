@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../../styles/displayResult.css";
@@ -7,13 +8,33 @@ const DisplayResult = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
   useEffect(() => {
-    // Replace current history so back button can't go to quiz
-    window.history.pushState(null, "", window.location.href);
-    window.onpopstate = () => {
-      window.history.go(1); // Forces forward navigation if back is pressed
+    // Prevent browser back to quiz
+    const handlePopState = () => {
+      if (sessionStorage.getItem("quizCompleted") === "true") {
+        // Redirect to home if back button pressed
+        navigate("/", { replace: true });
+      }
+    };
+
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [navigate]);
+
+  // Optional: prevent reload
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, []);
-
+  
   if (!state) {
     return (
       <div className="text-center mt-5">
@@ -29,7 +50,7 @@ const DisplayResult = () => {
 
   // Map user answers for quick lookup
   const userAnswers = {};
-  if (user && Array.isArray(user)) {
+  if (user) {
     user.forEach((ans) => {
       userAnswers[ans.question_id] = ans;
     });
@@ -63,7 +84,7 @@ const DisplayResult = () => {
       {currentQuestions && currentQuestions.length > 0 ? (
         currentQuestions.map((q, idx) => {
           const userAns = userAnswers[q.id];
-          const selectedAnswer = userAns?.selected_option || "Not Answered";
+          const selectedAnswer = userAns?.selected_option_id || "Not Answered";
 
           return (
             <div key={q.id} className="card shadow-sm p-4 mb-4 question-card">
@@ -73,8 +94,8 @@ const DisplayResult = () => {
 
               <ul className="list-group mt-3">
                 {q.options.map((opt) => {
-                  const isCorrect = opt.isCorrect;
-                  const isUserSelected = userAns?.selected_option === opt.option_text;
+                  const isCorrect = opt.is_correct;
+                  const isUserSelected = opt?.selected_option;
 
                   // highlight logic
                   let itemClass = "";

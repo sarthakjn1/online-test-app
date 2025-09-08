@@ -51,7 +51,7 @@ const Register = () => {
         category: user_category === "Student" ? 1 : 2,
         email: emailId.trim(),
       });
-      console.log("Register success:", response.data);
+  
       alert("✅ User registered successfully!");
       navigate("/login"); // redirect to login page
     } catch (error) {

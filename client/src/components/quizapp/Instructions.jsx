@@ -48,6 +48,7 @@ function Instructions() {
             alert("Please select a category before starting!");
             return;
         }
+        sessionStorage.removeItem("quizCompleted");
         navigate(`/quiz/${selectedCategory.id}`);
     };
 

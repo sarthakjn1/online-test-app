@@ -1,112 +1,69 @@
-from django.test import TestCase
-from usermanagement.models import User, MasterUserType, UserCategory
-from quiz.models import MasterCategory, Question, Option, ExamJourney, ExamResult
+from django.db import models
+from django.contrib.auth.hashers import make_password, check_password
 
+class UserManager(models.Manager):
+    def create_user(self, username, email, password=None, **extra_fields):
+        if not username:
+            raise ValueError("The Username must be set")
+        if not email:
+            raise ValueError("The Email must be set")
 
-class MasterCategoryModelTest(TestCase):
-    def test_create_category(self):
-        category = MasterCategory.objects.create(title="Science")
-        self.assertEqual(category.title, "Science")
-        self.assertTrue(category.isEnabled)
-
-
-class QuestionModelTest(TestCase):
-    def setUp(self):
-        self.category = MasterCategory.objects.create(title="Math")
-
-    def test_create_question(self):
-        question = Question.objects.create(
-            category=self.category,
-            question_txt="What is 2+2?",
-            isEnabled=True
+        user = self.model(
+            username=username,
+            email=email,
+            password=make_password(password),  # hash password
+            **extra_fields
         )
-        self.assertEqual(question.question_txt, "What is 2+2?")
-        self.assertTrue(question.isEnabled)
+        user.save(using=self._db)
+        return user
+
+# Create your models here.
+class MasterUserType(models.Model):
+    usertype = models.CharField(max_length=50, unique=True)
+    is_enable = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.usertype
+    
+
+class UserCategory(models.Model):
+    category = models.CharField(max_length=50, unique=True)
+    is_enable = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.category
 
 
-class OptionModelTest(TestCase):
-    def setUp(self):
-        self.category = MasterCategory.objects.create(title="Math")
-        self.question = Question.objects.create(
-            category=self.category,
-            question_txt="What is 5+5?",
-            isEnabled=True
-        )
 
-    def test_create_option(self):
-        option = Option.objects.create(
-            question=self.question,
-            option_text="10",
-            is_correct=True,
-            isEnabled=True
-        )
-        self.assertEqual(option.option_text, "10")
-        self.assertTrue(option.is_correct)
+class User(models.Model):
+    username = models.CharField(max_length=30, unique=True)
+    email = models.EmailField(unique=True)
+    password = models.CharField(max_length=255)  # hashed
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    usertype = models.ForeignKey(MasterUserType,default=1, on_delete=models.CASCADE)
+    category = models.ForeignKey(UserCategory, default=1, on_delete=models.CASCADE)
+    is_active = models.BooleanField(default=True)
+    registered_on = models.DateTimeField(auto_now_add=True)
+    objects = UserManager()
 
+    USERNAME_FIELD = "username"
+    REQUIRED_FIELDS = []
 
-class ExamJourneyModelTest(TestCase):
-    def setUp(self):
-        # ✅ Create required usertype and category for user
-        self.usertype = MasterUserType.objects.create(usertype="Student")
-        self.usercategory = UserCategory.objects.create(category="General")
+    @property
+    def is_anonymous(self):
+        return False
 
-        self.user = User.objects.create(
-            username="testuser",
-            email="test@example.com",
-            first_name="Test",
-            last_name="User",
-            usertype=self.usertype,
-            category=self.usercategory,
-        )
-        self.user.set_password("pass123")
-        self.user.save()
-
-        self.category = MasterCategory.objects.create(title="History")
-
-    def test_create_exam_journey(self):
-        journey = ExamJourney.objects.create(
-            user=self.user,
-            category=self.category,
-            user_journey={"Q1": "A"}
-        )
-        self.assertEqual(journey.user.username, "testuser")
-        self.assertEqual(journey.category.title, "History")
-        self.assertIn("ExamJourney", str(journey))
+    @property
+    def is_authenticated(self):
+        return True
 
 
-class ExamResultModelTest(TestCase):
-    def setUp(self):
-        self.usertype = MasterUserType.objects.create(usertype="Student")
-        self.usercategory = UserCategory.objects.create(category="General")
+    def set_password(self, raw_password):
+        self.password = make_password(raw_password)
 
-        self.user = User.objects.create(
-            username="student1",
-            email="student@example.com",
-            first_name="Student",
-            last_name="One",
-            usertype=self.usertype,
-            category=self.usercategory,
-        )
-        self.user.set_password("pass123")
-        self.user.save()
+    def check_password(self, raw_password):
+        return check_password(raw_password, self.password)
 
-        self.category = MasterCategory.objects.create(title="Geography")
-        self.journey = ExamJourney.objects.create(
-            user=self.user,
-            category=self.category,
-            user_journey={"Q1": "B"}
-        )
-
-    def test_create_exam_result(self):
-        result = ExamResult.objects.create(
-            exam=self.journey,
-            user=self.user,
-            category=self.category,
-            total_marks=100,
-            score=85,
-            total_time=300
-        )
-        self.assertEqual(result.exam, self.journey)
-        self.assertEqual(result.score, 85)
-        self.assertEqual(result.total_marks, 100)
-        self.assertIn("Result of", str(result))
+    def __str__(self):
+        return self.username

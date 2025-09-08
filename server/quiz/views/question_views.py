@@ -81,8 +81,7 @@ def get_category_questions(request, category_id):
         options_data = [
             {
                 "id": opt.id,
-                "option_text": opt.option_text,
-                "isCorrect": opt.is_correct  # flag correct answer
+                "option_text": opt.option_text
             }
             for opt in options
         ]
