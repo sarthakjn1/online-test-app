@@ -4,7 +4,6 @@ from rest_framework import status
 import random
 from ..models import Question, MasterCategory
 from ..serializers import QuestionSerializer, BulkQuestionCreateSerializer
-from ..utils.encryption import encrypt_flag
 
 @api_view(["POST"])
 def add_question(request):
