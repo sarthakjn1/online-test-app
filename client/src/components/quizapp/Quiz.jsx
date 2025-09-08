@@ -41,6 +41,27 @@ const Quiz = () => {
         console.error("Error fetching quiz data:", err);
       });
   }, [categoryId]);
+  
+  useEffect(() => {
+    // Prevent accidental reload/close
+    const handleBeforeUnload = (event) => {
+      event.preventDefault();
+      event.returnValue = ""; // Required for Chrome
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    // Prevent back navigation
+    const handlePopState = (event) => {
+      window.history.pushState(null, "", window.location.href);
+    };
+    window.history.pushState(null, "", window.location.href);
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
 
   const handleSubmit = async () => {
     if (!quizData) return;

@@ -6,6 +6,13 @@ import "../../styles/displayResult.css";
 const DisplayResult = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
+  useEffect(() => {
+    // Replace current history so back button can't go to quiz
+    window.history.pushState(null, "", window.location.href);
+    window.onpopstate = () => {
+      window.history.go(1); // Forces forward navigation if back is pressed
+    };
+  }, []);
 
   if (!state) {
     return (
